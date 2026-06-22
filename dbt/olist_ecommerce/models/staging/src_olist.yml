@@ -1,0 +1,79 @@
+version: 2
+
+sources: 
+  - name: raw_data
+    project: olist-ecomerce-project
+    dataset: olist_ecommerce_data_bronze
+
+    tables:
+      - name: olist_customers_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_customers_dataset.csv" 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+      
+      - name: olist_geolocation_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_geolocation_dataset.csv"
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+
+      - name: olist_order_items_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_order_items_dataset.csv" 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+
+      - name: olist_order_payments_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_order_payments_dataset.csv" 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+    
+      - name: olist_order_reviews_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_order_reviews_dataset.csv" 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+
+      - name: olist_orders_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_orders_dataset.csv" # 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+      
+      - name: olist_products_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_products_dataset.csv" 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+      
+      - name: olist_sellers_dataset
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/olist_sellers_dataset.csv" 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true
+
+      - name: product_category_name_translation
+        external:
+          location: "gs://olist_ecomerce_bucket/raw_data/product_category_name_translation.csv" 
+          options: 
+            format: csv
+            skip_leading_rows: 1
+            allow_quoted_newlines: true

@@ -8,3 +8,6 @@ __pycache__/
 *.json
 .terraform.lock.hcl
 .env
+Airflow/logs
+dbt/logs
+.python-version
