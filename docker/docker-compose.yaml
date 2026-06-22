@@ -1,17 +1,18 @@
 x-airflow-common: &airflow-common
-  image: apache/airflow:2.9.1-python3.10
+  image: apache/airflow:3.2.2-python3.10
   environment:
     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgres+psycopg2://airflow:airflow@postgres:5432/airflow_metadata
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
     - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW_FERNET_KEY}
     - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
     - AIRFLOW__CORE__LOGGING_LEVEL=INFO
     - GOOGLE_APPLICATION_CREDENTIALS=/opt/airflow/.config/gcloud/application_default_credentials.json
   volumes:
     - ../Airflow/dags:/opt/airflow/dags
     - ../Airflow/logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
-    - ${APPDATA:-$HOME/.config}/gcloud:/opt/airflow/.config/gcloud:ro
+    - ${G_PATH}:/opt/airflow/.config/gcloud:ro
   depends_on:
     postgres:
       condition: service_healthy
@@ -27,26 +28,56 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - airflow_metadata_data:/var/lib/postgres/data
+      - airflow_metadata_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
-  
-  airflow-webserver:
+    restart: always
+  airflow-api-server:
     <<: *airflow-common
-    command: webserver
+    container_name: olist_airflow_api_server
+    command: airflow api-server
     ports:
       - "8080:8080"
-    container_name: olist_airflow_webserver
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow_init:
+        condition: service_completed_successfully
+    restart: always
 
   airflow_scheduler:
     <<: *airflow-common
-    command: bash -c "airflow db migrate && airflow users create --username admin --firstname Fiol --lastname Fiol --role Admin \
-              --email admin@example.com --password admin && airflow scheduler"
+    command: airflow scheduler
     container_name: olist_airflow_scheduler
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow_init:
+        condition: service_completed_successfully
+    restart: always
+
+  airflow_init:
+    <<: *airflow-common
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        airflow db migrate
+
+        airflow users create \
+        --username airflow \
+        --firstname Admin \
+        --lastname User \
+        --role Admin \
+        --email admin@example.com \
+        --password airflow || true
+    restart: "no"
 
 volumes:
   airflow_metadata_data:
     driver: local
+
+  
