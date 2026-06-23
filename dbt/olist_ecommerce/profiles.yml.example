@@ -1,0 +1,14 @@
+
+olist_ecommerce:
+  outputs:
+    dev:
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      dataset: "{{ env_var('DBT_DATASET', 'dataset-name') }}"
+      location: "{{ env_var('GCP_LOCATION', 'region') }}"
+      method: oauth
+      priority: interactive
+      type: bigquery
+      submission_method: dataproc_serverless
+      dataproc_region: "{{ env_var('GCP_LOCATION', 'region') }}"
+      gcs_bucket: "{{ env_var('GCS_BUCKET') }}"
+  target: dev
