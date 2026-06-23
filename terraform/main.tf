@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "google" {
-    project = "olist-ecomerce-project"
+    project = var.project_id
     region =var.location
   
 }
@@ -28,14 +28,16 @@ resource "google_storage_bucket" "olist_ecommerce" {
       type = "AbortIncompleteMultipartUpload"
     }
   }
+      lifecycle_rule {
+    condition {
+      age=1
+    }
+    action {
+      type = "Delete"
+    }
+  }
 }
 
-resource "google_bigquery_dataset" "bronze" {
-    dataset_id = "olist_ecommerce_data_bronze"
-    description = "Dataset for bronze"
-    location = var.location
-    delete_contents_on_destroy = true
-}
 
 resource "google_bigquery_dataset" "silver" {
     dataset_id = "olist_ecommerce_data_silver"
@@ -49,4 +51,21 @@ resource "google_bigquery_dataset" "gold" {
     description = "Dataset for gold"
     location = var.location
     delete_contents_on_destroy = true
+}
+
+data "google_project" "project" {
+  project_id = var.project_id
+}
+
+
+resource "google_project_iam_member" "dbt_spark_bq" {
+  project = var.project_id
+  role = "roles/bigquery.admin"
+  member = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "dbt_spark_dataproc" {
+  project = var.project_id
+  role = "roles/dataproc.worker"
+  member = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
 }

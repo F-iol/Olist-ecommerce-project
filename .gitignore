@@ -11,3 +11,4 @@ __pycache__/
 Airflow/logs
 dbt/logs
 .python-version
+logs/

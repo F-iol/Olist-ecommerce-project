@@ -3,77 +3,50 @@ version: 2
 sources: 
   - name: raw_data
     project: olist-ecomerce-project
-    dataset: olist_ecommerce_data_bronze
+    dataset: olist_customers_dataset_silver 
 
     tables:
       - name: olist_customers_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_customers_dataset.csv" 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
-      
+        identifier: customers_silver 
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_customers_dataset.csv"
+
       - name: olist_geolocation_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_geolocation_dataset.csv"
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
+        identifier: geolocation_silver 
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_geolocation_dataset.csv"
 
       - name: olist_order_items_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_order_items_dataset.csv" 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
+        identifier: order_items_silver
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_order_items_dataset.csv"
 
       - name: olist_order_payments_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_order_payments_dataset.csv" 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
-    
+        identifier: order_payments_silver
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_order_payments_dataset.csv"
+
       - name: olist_order_reviews_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_order_reviews_dataset.csv" 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
+        identifier: order_reviews_silver
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_order_reviews_dataset.csv"
 
       - name: olist_orders_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_orders_dataset.csv" # 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
-      
+        identifier: orders_silver
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_orders_dataset.csv"
+
       - name: olist_products_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_products_dataset.csv" 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
-      
+        identifier: products_silver
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_products_dataset.csv"
+
       - name: olist_sellers_dataset
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/olist_sellers_dataset.csv" 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
+        identifier: sellers_silver
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/olist_sellers_dataset.csv"
 
       - name: product_category_name_translation
-        external:
-          location: "gs://olist_ecomerce_bucket/raw_data/product_category_name_translation.csv" 
-          options: 
-            format: csv
-            skip_leading_rows: 1
-            allow_quoted_newlines: true
+        identifier: product_category_name_translation_silver
+        meta:
+          path: "gs://olist_ecomerce_bucket/raw_data/product_category_name_translation.csv"
