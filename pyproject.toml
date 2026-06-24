@@ -5,11 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = "==3.10.*"
 dependencies = [
-    "dbt-bigquery>=1.8.0,<1.9.0",
-    "dbt-core>=1.11.11",
+    "dbt-bigquery>=1.8,<1.9",
+    "dbt-core>=1.8,<1.9",
     "google-cloud>=0.34.0",
     "google-cloud-storage<3.0.0",
     "kaggle==1.6.14",
     "psycopg2-binary>=2.9.12",
-    "pyspark>=4.1.2",
+    "pyspark==3.5.8",
 ]
