@@ -1,0 +1,42 @@
+version: 2
+
+models:
+    - name: orders_silver
+      columns: 
+        - name: order_id
+          data_tests:
+            - not_null
+            - unique
+        - name: order_estimated_delivery_date
+          data_tests:
+            - not_null
+        - name: customer_id
+          data_tests:
+            - not_null
+        - name: order_status
+          data_tests:
+            - accepted_values:
+                values: ['delivered', 'shipped', 'cancelled', 'invoiced', 'processing', 'approved', 'unavailable', 'created']
+
+    - name: products_silver
+      columns: 
+      - name: product_weight_g
+        data_tests: 
+          - not_null
+      - name: product_length_cm
+        data_tests: 
+          - not_null
+      - name: product_height_cm
+        data_tests: 
+          - not_null
+      - name: product_width_cm
+        data_tests: 
+          - not_null
+
+    - name: products_silver
+      columns:
+        - name: category_name
+          data_tests:
+            - relationships:
+                to: ref('product_category_translations') 
+                field: string_field_0
