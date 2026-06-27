@@ -32,11 +32,8 @@ models:
       - name: product_width_cm
         data_tests: 
           - not_null
-
-    - name: products_silver
-      columns:
-        - name: category_name
-          data_tests:
+      - name: category_name
+        data_tests:
             - relationships:
                 to: ref('product_category_translations') 
-                field: string_field_0
+                field: product_category_name
