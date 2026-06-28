@@ -1,3 +1,4 @@
+{{config (materialized='table')}}
 SELECT 
     op.payment_type,
     format_timestamp('%Y-%m',o.order_purchase_timestamp) as year_month,
