@@ -12,3 +12,4 @@ Airflow/logs
 dbt/logs
 .python-version
 logs/
+*.egg-info
