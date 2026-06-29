@@ -3,6 +3,7 @@ import os
 import tempfile
 from google.cloud import storage
 import zipfile
+import datetime
 
 # %%
 def download_kaggle_to_gcs(dataset_path,bucket_name,gcp_project_name):
@@ -31,8 +32,3 @@ def download_kaggle_to_gcs(dataset_path,bucket_name,gcp_project_name):
                 print(f"Updating {f}")
                 blob.upload_from_filename(local_path)
     print('All updated')
-
-# %%
-download_kaggle_to_gcs('olistbr/brazilian-ecommerce','olist_ecomerce_bucket','olist-ecomerce-project')
-
-

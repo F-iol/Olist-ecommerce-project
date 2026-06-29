@@ -1,10 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "olist-ecommerce-project"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = "==3.10.*"
+requires-python = ">=3.10,<3.11"
 dependencies = [
+    "astronomer-cosmos>=1.14.2",
     "dbt-bigquery>=1.8,<1.9",
     "dbt-core>=1.8,<1.9",
     "google-cloud>=0.34.0",
@@ -13,3 +18,7 @@ dependencies = [
     "psycopg2-binary>=2.9.12",
     "pyspark==3.5.8",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ingestion*"]

@@ -1,18 +1,23 @@
 x-airflow-common: &airflow-common
-  image: apache/airflow:3.2.2-python3.10
+  build:
+    context: ../
+    dockerfile: docker/Dockerfile
   environment:
     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
     - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
     - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW_FERNET_KEY}
     - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
     - AIRFLOW__CORE__LOGGING_LEVEL=INFO
     - GOOGLE_CLOUD_PROJECT=${GCP_PROJECT_ID}
-    - GOOGLE_APPLICATION_CREDENTIALS=/opt/airflow/.config/gcloud/application_default_credentials.json
+    - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
+    - AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL=30
   volumes:
     - ../Airflow/dags:/opt/airflow/dags
     - ../Airflow/logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
     - ${G_PATH}:/opt/airflow/.config/gcloud:ro
+    - ${KAGGLE_CREDS}:/home/airflow/.kaggle/kaggle.json:ro
   depends_on:
     postgres:
       condition: service_healthy

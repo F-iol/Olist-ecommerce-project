@@ -1,0 +1,9 @@
+FROM apache/airflow:3.2.2-python3.10
+
+COPY ingestion /opt/airflow/ingestion
+COPY pyproject.toml /opt/airflow/pyproject.toml
+COPY dbt /opt/airflow/dbt
+
+WORKDIR /opt/airflow
+
+RUN pip install -e .
