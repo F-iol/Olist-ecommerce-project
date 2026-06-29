@@ -7,6 +7,7 @@ terraform {
   }
 }
 
+
 provider "google" {
     project = var.project_id
     region =var.location
@@ -22,7 +23,7 @@ resource "google_storage_bucket" "olist_ecommerce" {
 
     lifecycle_rule {
     condition {
-      age=1
+      age=3
     }
     action {
       type = "AbortIncompleteMultipartUpload"
@@ -30,7 +31,7 @@ resource "google_storage_bucket" "olist_ecommerce" {
   }
       lifecycle_rule {
     condition {
-      age=1
+      age=3
     }
     action {
       type = "Delete"

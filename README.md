@@ -33,3 +33,11 @@ Problems with service accounts I actually don't know why it happend but despite 
 ---
 
 I initialy wanted to query bronze tables using Pyspark but obviously something went wrong I had some problems with mismatched versions and Java when I tried running Pyspark locally so I decided upon going back to external tables idea so bronze tables can be queried easily via BigQuery on GCP so had to re-write src_olist.yml so it works with ```bash dbt run-operation stage_external_sources```. Dataset is a bit more messy than expected , had to map wrong city names to correct one , I used google sheets for that with regexp and lookups comparing to dataset of brazil city names then dropped it to ```bash seeds/``` and gcs for easy reading 
+
+### Docker/airflow
+My initial docker compose was kinda faulty Dags were not being parsed at all , Airflow UI displayed hostname not available aswell as refused connection.
+Issue with dags were simple it's because I forgot to include dag processor as a service. I also opened port 8974 which Ariflow uses for log serving but it didnt resolve anything and issue with local executor still persisted.After some time of troubleshooting i decided to re-made my docker compose and based it more on official ```bash docker-compose.yml``` I dont use local executor anymore and switched to celery+redis and my issues were resolved for now
+
+### Airflow/GCP
+There were some problems with granting airflow access to gcp so it can upload to bucket and create tables - solved by hardcodding class that returns all desired tokens and configurations<br>
+GCP really limits free accounts so I had to specify some properties for dataproc and limit active run tasks to 1 but it didnt fully solve the issue as sometimes I kept getting erorr that my account used all limited resources , unable to change it on GCP I let each dbt model retry 10 times in case I won't have resources avaiable on GCP (on dry run finished all tasks in max 3 retries)
