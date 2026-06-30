@@ -36,7 +36,7 @@ class HardcodedGcpOauthMapping(GoogleCloudOauthProfileMapping):
         }
     
 render_config = RenderConfig(
-    select=['path:seeds/raw_data_unique_geolocation_cities.csv',
+    select=[
             'path:models/silver'
             ],
             test_behavior='after_all'
