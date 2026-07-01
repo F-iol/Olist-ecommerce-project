@@ -9,16 +9,64 @@ for now more or less it looks like this:
 ```mermaid
 flowchart LR
 
-A[Terraform] --> B["GCP Setup<br/>Service Accounts + Infrastructure<br/>Silver Datasets"]
+A[Terraform] --> B["GCP Setup<br/>Service Accounts + Infrastructure"]
 
 C[Kaggle Dataset] --> D["ingestion.py"]
 D --> E["Google Cloud Storage Bucket<br/>Bronze / Raw Data"]
 
-E --> F["PySpark Jobs"]
-F --> G["Silver Tables - Cleaned & Structured"]
+E --> F["PySpark Jobs (Serverless Dataproc)"]
+F --> G["BigQuery Silver Tables<br/>Cleaned & Structured"]
 
-G --> H["To be continued"]
+G --> H["dbt SQL Models"]
+H --> I["BigQuery Gold Tables<br/>Facts & Dimensions"]
+
+I --> J["Dashboard"]
 ```
+
+# Installation
+
+requirements : Docker,Terraform,GoogleCloudSdk
+
+### 1. Clone repo
+```bash
+git clone https://github.com/F-iol/Olist-ecommerce-project.git
+```
+
+### 2. Virtual envrioment
+uv version
+```bash
+uv venv
+uv sync
+```  
+pip version
+```bash
+python -m venv .venv
+pip install --upgrade pip # so it can read pyproject.toml
+pip install .
+```
+
+### 3. Auth gcloud
+```bash
+gcloud auth login
+gcloud auth application-default login
+```
+
+### 4. IaC- Infrastracture as Code - building objects inside GCP
+```bash
+terraform init # in teraform/
+terraform apply
+```
+
+### 5. Docker contrainers
+```bash
+docker compose up --build -d
+```
+
+### 6. Transformations/Orcherstration
+1.Open airflow UI ```bash localhost:8080```
+2.if dags are not visible wait until they're parsed
+3.Manually trigger "1_fetch_to_raw_data" dag
+4.If pulling data ends up successfull other dags will automatically run
 
 # Current problems and approaches
 
@@ -32,7 +80,7 @@ Problems with service accounts I actually don't know why it happend but despite 
 
 ---
 
-I initialy wanted to query bronze tables using Pyspark but obviously something went wrong I had some problems with mismatched versions and Java when I tried running Pyspark locally so I decided upon going back to external tables idea so bronze tables can be queried easily via BigQuery on GCP so had to re-write src_olist.yml so it works with ```bash dbt run-operation stage_external_sources```. Dataset is a bit more messy than expected , had to map wrong city names to correct one , I used google sheets for that with regexp and lookups comparing to dataset of brazil city names then dropped it to ```bash seeds/``` and gcs for easy reading 
+I initialy wanted to query bronze tables using Pyspark but obviously something went wrong I had some problems with mismatched versions and Java when I tried running Pyspark locally so I decided upon going back to external tables idea so bronze tables can be queried easily via BigQuery on GCP so had to re-write src_olist.yml so it works with ```bash dbt run-operation stage_external_sources```.  Dataset is a bit more messy than expected , had to map wrong city names to correct one , I used google sheets for that with regexp and lookups comparing to dataset of brazil city names then dropped it to ```airflow/include/``` and gcs for easy reading 
 
 ### Docker/airflow
 My initial docker compose was kinda faulty Dags were not being parsed at all , Airflow UI displayed hostname not available aswell as refused connection.
@@ -41,3 +89,4 @@ Issue with dags were simple it's because I forgot to include dag processor as a 
 ### Airflow/GCP
 There were some problems with granting airflow access to gcp so it can upload to bucket and create tables - solved by hardcodding class that returns all desired tokens and configurations<br>
 GCP really limits free accounts so I had to specify some properties for dataproc and limit active run tasks to 1 but it didnt fully solve the issue as sometimes I kept getting erorr that my account used all limited resources , unable to change it on GCP I let each dbt model retry 10 times in case I won't have resources avaiable on GCP (on dry run finished all tasks in max 3 retries)
+ADC was used because GCP didnt allow me to create proper keys for service accounts
