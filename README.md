@@ -63,10 +63,10 @@ docker compose up --build -d
 ```
 
 ### 6. Transformations/Orcherstration
-1.Open airflow UI ```bash localhost:8080```
-2.if dags are not visible wait until they're parsed
-3.Manually trigger "1_fetch_to_raw_data" dag
-4.If pulling data ends up successfull other dags will automatically run
+1.Open airflow UI ```bash localhost:8080```  
+2.if dags are not visible wait until they're parsed  
+3.Manually trigger "1_fetch_to_raw_data" dag  
+4.If pulling data ends up successfull other dags will automatically run  
 
 # Current problems and approaches
 
